@@ -16,10 +16,11 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('a user connected')
-    socket.emit('user connected', 'user connected !!!')
+    socket.broadcast.emit('user connected', 'a user connected !!!!');
+
     socket.on('disconnect', () => {
         console.log('a user disconnected')
-        socket.emit('user disconnected', 'user disconnected !!!')
+        socket.broadcast.emit('user disconnected', 'a user disconnected !!!!');
     })
 
     socket.on('chat message', (message) => {
@@ -27,8 +28,17 @@ io.on('connection', (socket) => {
         io.emit('chat message', message);
     })
 
+    socket.on('user disconnected', () => {
+        console.log('a user disconnected from socket !!!!')
+        io.emit('user disconnected', 'a user disconnected !!!!');
+    })
+
+    socket.on('user connected', () => {
+        io.emit('user connected', 'a user connected !!!!');
+    })
+
 })
 
-server.listen(3000, () => {
-    console.log('Listening on port 3000')
+server.listen(3002, () => {
+    console.log('Listening on port 3002')
 })
